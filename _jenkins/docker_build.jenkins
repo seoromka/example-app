@@ -3,9 +3,6 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
-    def scmVars = checkout([
-        $class: 'GitSCM'
-    ])
     agent {
         label 'master'
     }
@@ -15,6 +12,27 @@ pipeline {
         timestamps()
     }
     stages {
+        stage('Checkout code') {
+          steps {
+            script {
+              // Checkout the repository and save the resulting metadata
+              def scmVars = checkout([
+                $class: 'GitSCM'
+              ])
+
+              // Display the variable using scmVars
+              echo "scmVars.GIT_COMMIT"
+              echo "${scmVars.GIT_COMMIT}"
+
+              // Displaying the variables saving it as environment variable
+              env.GIT_COMMIT = scmVars.GIT_COMMIT
+              env.BRANCH_NAME = scmVars.GIT_BRANCH
+              echo "env.GIT_COMMIT"
+              echo "${env.GIT_COMMIT}"
+            }
+
+          }
+        }
         stage("docker login") {
             steps {
                 echo " ============== docker login =================="
@@ -31,9 +49,6 @@ pipeline {
                 sh 'echo $BRANCH_NAME' 
                 sh "echo $BRANCH_NAME"
                 sh "echo ${env.BRANCH_NAME}"
-                echo 'test'
-                echo "scmVars.GIT_COMMIT"
-                echo "${scmVars.GIT_COMMIT}"
                 
                 dir ('_docker') {
                 	sh "docker build -t rkostin/example-app:${env.BRANCH_NAME} . "
