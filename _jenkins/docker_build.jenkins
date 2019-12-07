@@ -3,6 +3,9 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
+    parameters {
+        gitParameter branchFilter: 'origin/(.*)', defaultValue: 'lastest', name: 'BRANCH', type: 'PT_BRANCH'
+    }
     agent {
         label 'master'
     }
@@ -25,6 +28,7 @@ pipeline {
         stage("create docker image") {
             steps {
                 echo " ============== start building image =================="
+                echo "${params.BRANCH}"
                 dir ('_docker') {
                 	sh 'docker build -t rkostin/example-app:latest . '
                 }
