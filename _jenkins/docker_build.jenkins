@@ -2,7 +2,10 @@
 // Run docker build
 properties([disableConcurrentBuilds()])
 
-pipeline {    
+pipeline {
+    def scmVars = checkout([
+        $class: 'GitSCM'
+    ])
     agent {
         label 'master'
     }
@@ -28,6 +31,10 @@ pipeline {
                 sh 'echo $BRANCH_NAME' 
                 sh "echo $BRANCH_NAME"
                 sh "echo ${env.BRANCH_NAME}"
+                echo 'test'
+                echo "scmVars.GIT_COMMIT"
+                echo "${scmVars.GIT_COMMIT}"
+                
                 dir ('_docker') {
                 	sh "docker build -t rkostin/example-app:${env.BRANCH_NAME} . "
                 }
