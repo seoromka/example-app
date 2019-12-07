@@ -29,6 +29,7 @@ pipeline {
             steps {
                 echo " ============== start building image =================="
                 echo "${params.BRANCH}"
+                echo "${env.BRANCH_NAME}"
                 dir ('_docker') {
                 	sh "docker build -t rkostin/example-app:${params.BRANCH} . "
                 }
