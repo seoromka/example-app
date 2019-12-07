@@ -25,6 +25,9 @@ pipeline {
         stage("create docker image") {
             steps {
                 echo " ============== start building image =================="
+                sh 'echo $BRANCH_NAME' 
+                sh "echo $BRANCH_NAME"
+                sh "echo ${env.BRANCH_NAME}"
                 dir ('_docker') {
                 	sh "docker build -t rkostin/example-app:${env.BRANCH_NAME} . "
                 }
