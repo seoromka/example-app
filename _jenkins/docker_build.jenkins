@@ -28,8 +28,9 @@ pipeline {
         stage("create docker image") {
             steps {
                 echo " ============== start building image =================="
+                echo "${params.BRANCH}"
                 dir ('_docker') {
-                	sh 'docker build -t rkostin/example-app:${params.BRANCH} . '
+                	sh 'docker build -t rkostin/example-app:test . '
                 }
             }
         }
@@ -37,7 +38,7 @@ pipeline {
             steps {
                 echo " ============== start pushing image =================="
                 sh '''
-                docker push rkostin/example-app:${params.BRANCH}
+                docker push rkostin/example-app:test
                 '''
             }
         }
