@@ -2,10 +2,7 @@
 // Run docker build
 properties([disableConcurrentBuilds()])
 
-pipeline {
-    parameters {
-        gitParameter branchFilter: 'origin/(.*)', defaultValue: 'dev-test', name: 'BRANCH', type: 'PT_BRANCH'
-    }
+pipeline {    
     agent {
         label 'master'
     }
@@ -28,17 +25,16 @@ pipeline {
         stage("create docker image") {
             steps {
                 echo " ============== start building image =================="
-                echo "${params.BRANCH}"
-                echo "${env.BRANCH_NAME}"
+                echo "${env}"
                 dir ('_docker') {
-                	sh "docker build -t rkostin/example-app:${params.BRANCH} . "
+                	sh "docker build -t rkostin/example-app:${env.BRANCH_NAME} . "
                 }
             }
         }
         stage("docker push") {
             steps {
                 echo " ============== start pushing image =================="
-                sh "docker push rkostin/example-app:${params.BRANCH}"
+                sh "docker push rkostin/example-app:${env.BRANCH_NAME}"
             }
         }
     }
